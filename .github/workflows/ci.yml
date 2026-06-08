@@ -79,11 +79,16 @@ jobs:
       (needs.backend-lint.result == 'success' || needs.backend-lint.result == 'skipped') &&
       (needs.formatting-hygiene.result == 'success' || needs.formatting-hygiene.result == 'skipped')
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ matrix.python-version }}
       - name: Install backend system dependencies
         run: sudo apt-get update && sudo apt-get install -y libcairo2-dev pkg-config
       - name: Install backend dependencies
@@ -95,6 +100,9 @@ jobs:
 
   backend-audit:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ppython-version: ["3.11"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -176,6 +184,9 @@ jobs:
       needs.detect-changes.outputs.run_frontend == 'true' &&
       (needs.formatting-hygiene.result == 'success' || needs.formatting-hygiene.result == 'skipped')
     runs-on: ubuntu-latest
+    strategy:
+     matrix:
+        node-version: ["20"]
     defaults:
       run:
         working-directory: frontend
